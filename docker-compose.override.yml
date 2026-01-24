@@ -1,0 +1,32 @@
+# docker-compose.override.yml (Dockge will merge this automatically)
+services:
+  elasticsearch:
+#    environment:
+#      - ES_JAVA_OPTS=-Xms12G -Xmx12G    # JVM heap (50% of container mem_limit)  
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'
+          memory: 16G
+        reservations:
+          memory: 16G
+  opencti:
+    environment:
+      - NODE_OPTIONS="--max-old-space-size=6144"    # Node.js heap limit
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 8G
+  redis:
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+  rabbitmq:
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
