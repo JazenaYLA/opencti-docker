@@ -6,7 +6,7 @@ services:
 
   # Generate RSA key for xtm-composer (PKCS#8 format)
   rsa-key-generator:
-    image: alpine/openssl:3.5.4
+    image: alpine/openssl:latest
     volumes:
       - rsakeys:/keys
     entrypoint: ["/bin/ash"]
@@ -18,7 +18,7 @@ services:
       retries: 3
     restart: always
   redis:
-    image: redis:8.4.0
+    image: redis:8.6.1
     restart: always
     volumes:
       - redisdata:/data
@@ -28,7 +28,7 @@ services:
       timeout: 5s
       retries: 3
   elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.9
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.19.12
     volumes:
       - esdata:/usr/share/elasticsearch/data
     environment:
@@ -55,7 +55,7 @@ services:
       timeout: 3s
       retries: 50
   minio:
-    image: minio/minio:RELEASE.2025-06-13T11-33-47Z
+    image: minio/minio:latest
     volumes:
       - s3data:/data
     ports:
@@ -93,7 +93,7 @@ services:
   ###########################
 
   xtm-composer:
-    image: filigran/xtm-composer:1.0.2
+    image: filigran/xtm-composer:latest
     platform: linux/amd64
     environment:
       - MANAGER__ID=${XTM_COMPOSER_ID}
@@ -121,7 +121,7 @@ services:
   ###########################
   
   opencti:
-    image: opencti/platform:6.9.17
+    image: opencti/platform:latest
     environment:
       - NODE_OPTIONS=--max-old-space-size=8096
       - APP__PORT=8080
@@ -129,6 +129,7 @@ services:
       - APP__ADMIN__EMAIL=${OPENCTI_ADMIN_EMAIL}
       - APP__ADMIN__PASSWORD=${OPENCTI_ADMIN_PASSWORD}
       - APP__ADMIN__TOKEN=${OPENCTI_ADMIN_TOKEN}
+      - APP__ENCRYPTION_KEY=${OPENCTI_ENCRYPTION_KEY}
       - REDIS__HOSTNAME=redis
       - REDIS__PORT=6379
       - ELASTICSEARCH__URL=http://elasticsearch:9200
@@ -166,7 +167,7 @@ services:
       timeout: 5s
       retries: 20
   worker:
-    image: opencti/worker:6.9.17
+    image: opencti/worker:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -183,7 +184,7 @@ services:
   ###########################
 
   connector-export-file-stix:
-    image: opencti/connector-export-file-stix:6.9.17
+    image: opencti/connector-export-file-stix:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -196,7 +197,7 @@ services:
       opencti:
         condition: service_healthy
   connector-export-file-csv:
-    image: opencti/connector-export-file-csv:6.9.17
+    image: opencti/connector-export-file-csv:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -209,7 +210,7 @@ services:
       opencti:
         condition: service_healthy
   connector-export-file-txt:
-    image: opencti/connector-export-file-txt:6.9.17
+    image: opencti/connector-export-file-txt:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -222,7 +223,7 @@ services:
       opencti:
         condition: service_healthy
   connector-import-file-stix:
-    image: opencti/connector-import-file-stix:6.9.17
+    image: opencti/connector-import-file-stix:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -237,7 +238,7 @@ services:
       opencti:
         condition: service_healthy
   connector-import-document:
-    image: opencti/connector-import-document:6.9.17
+    image: opencti/connector-import-document:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -254,7 +255,7 @@ services:
       opencti:
         condition: service_healthy
   connector-import-file-yara:
-    image: opencti/connector-import-file-yara:6.9.17
+    image: opencti/connector-import-file-yara:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -269,7 +270,7 @@ services:
       opencti:
         condition: service_healthy
   connector-analysis:
-    image: opencti/connector-import-document:6.9.17
+    image: opencti/connector-import-document:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -285,7 +286,7 @@ services:
       opencti:
         condition: service_healthy
   connector-import-external-reference:
-    image: opencti/connector-import-external-reference:6.9.17
+    image: opencti/connector-import-external-reference:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -301,7 +302,7 @@ services:
   ###########################
 
   connector-opencti:
-    image: opencti/connector-opencti:6.9.17
+    image: opencti/connector-opencti:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
@@ -315,7 +316,7 @@ services:
       opencti:
         condition: service_healthy      
   connector-mitre:
-    image: opencti/connector-mitre:6.9.17
+    image: opencti/connector-mitre:latest
     environment:
       - OPENCTI_URL=http://opencti:8080
       - OPENCTI_TOKEN=${OPENCTI_ADMIN_TOKEN}
